@@ -1,0 +1,34 @@
+{
+  "name": "kinkychat",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "git submodule update --init --recursive && cd ./KinkiestDungeon && npx tsc --declaration --emitDeclarationOnly",
+    "build": "npx rollup -c && node zip.js",
+    "build:watch": "tsc -w && node zip.js",
+    "clean": "rm -rf ./dist/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lopata0/KinkyChat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lopata0/KinkyChat/issues"
+  },
+  "homepage": "https://github.com/lopata0/KinkyChat#readme",
+  "description": "",
+  "devDependencies": {
+    "@huggingface/transformers": "^3.5.1",
+    "@mlc-ai/web-llm": "^0.2.79",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "archiver": "^7.0.1",
+    "rollup": "^4.40.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.8.3"
+  }
+}

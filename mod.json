@@ -1,0 +1,11 @@
+{
+	"modname": "Kinky Chat",
+	"moddesc": "Chat with NPCs using LLM.",
+	"author": "lopata",
+	"modbuild": 1.2,
+	"gamemajor": 5,
+	"gameminor": 4,
+	"gamepatch_min": 43,
+	"gamepatch_max": -1,
+	"priority": 0
+}
