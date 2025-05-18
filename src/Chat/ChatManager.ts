@@ -14,7 +14,9 @@ export class ChatManager {
 
     public async createMemoriesFromCurrentChat(): Promise<string> {
         if(!this.currentChat) throw new Error("currentChat is undefined");
+        if(this.currentChat.messages.length < 3) return "";
         let historyFormatted = "";
+        
         this.currentChat.messages.forEach((message) => {
             let role = message["role"];
             if (role == "system") return;
