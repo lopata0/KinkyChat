@@ -52,6 +52,8 @@ export class ModUi {
         { [`KDModButton${this.modName}UseOllama`]: "Using ollama" },
         { [`KDModButton${this.modName}UseLmStudio`]: "Using LM Studio" },
         { [`KDModButton${this.modName}ApiUrl`]: "API URL (if default model is disabled):" },
+        { [`KDModButton${this.modName}ApiUrlInput`]: "" },
+        { [`KDModButton${this.modName}ModelNameInput`]: "" },
         { [`KDModButton${this.modName}ModelName`]: "Model name (if default model is disabled):" },
         { [`KDModButton${this.modName}UseDefaultModelWeb`]: "Use automatic default model in browser" },
         { [`KDModButton${this.modName}AutoLoad`]: "Load mod automatically next time" }
@@ -88,6 +90,8 @@ export class ModUi {
     static initSettings() {
         if (!KDEventMapGeneric['afterModSettingsLoad']) return;
         KDEventMapGeneric['afterModSettingsLoad'][this.modName] = (e, data) => {
+            
+            
             KDModConfigs[this.modName] = [
                 {
                     type: "boolean",
@@ -101,7 +105,7 @@ export class ModUi {
                 },
                 {
                     type: "string",
-                    refvar: this.modName + "ApiUrl",
+                    refvar: this.modName + "ApiUrlInput",
                 },
                 {
                     type: "text",
@@ -109,7 +113,7 @@ export class ModUi {
                 },
                 {
                     type: "string",
-                    refvar: this.modName + "ModelName",
+                    refvar: this.modName + "ModelNameInput",
                 },
                 {
                     type: "boolean",
@@ -124,10 +128,12 @@ export class ModUi {
                 },
 
             ];
+            let settings = localStorage.getItem('KDModSettings');
+            let settingsobject = settings ? JSON.parse(settings)["KinkyChat"] ?? {} : {};
 
-            let settingsobject: ModSettings = (!KDModSettings.hasOwnProperty(this.modName)) ? {} : Object.assign({}, KDModConfigs[this.modName]);
+            
             KDModConfigs[this.modName].forEach((option: ModConfigOption) => {
-                if (!settingsobject[option.refvar]) {
+                if (settingsobject[option.refvar] == undefined) {
                     settingsobject[option.refvar] = option.default
                 }
             });
@@ -143,8 +149,8 @@ export class ModUi {
     static config: Config = {};
 
     static refreshConfig() {
-        this.config.apiUrl = KDModSettings[this.modName][this.modName + "ApiUrl"];
-        this.config.apiModelName = KDModSettings[this.modName][this.modName + "ModelName"];
+        this.config.apiUrl = KDModSettings[this.modName][this.modName + "ApiUrlInput"];
+        this.config.apiModelName = KDModSettings[this.modName][this.modName + "ApiUrlInput"];
         this.config.autoLoad = KDModSettings[this.modName][this.modName + "AutoLoad"];
         this.config.useDefaultModel = KDModSettings[this.modName][this.modName + "UseDefaultModelWeb"];
     }

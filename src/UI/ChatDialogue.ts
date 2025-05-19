@@ -1,13 +1,16 @@
 import { Chat } from "@mod/Chat/Chat";
 import { ChatManager } from "@mod/Chat/ChatManager";
+import { SentimentClassification } from "@mod/Models/Sentiment";
 import { ModUi } from "@mod/UI/ModUi";
 
 export class ChatDialogue {
 
     static chatManager?: ChatManager;
+    static sentimentClassification?: SentimentClassification;
 
-    static init(chatManager: ChatManager) {
+    static init(chatManager: ChatManager, sentimentClassification: SentimentClassification) {
         this.chatManager = chatManager;
+        this.sentimentClassification = sentimentClassification;
 
         const dialogue = KDDialogue["GenericAlly"];
 
@@ -111,6 +114,9 @@ export class ChatDialogue {
                 addTextKey("rGenericAllyChat_Say", this.formatResponse(response));
             }
         });
+
+        let res = this.sentimentClassification?.model(reply);
+        console.log(res);
 
         addTextKey("rGenericAllyChat", this.formatResponse(reply));
 
