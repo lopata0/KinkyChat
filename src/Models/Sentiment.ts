@@ -3,7 +3,6 @@ import { pipeline } from '@huggingface/transformers';
 export class SentimentClassification {
     public model?: any;
     public async init(): Promise<void> {
-        console.log("RUNED AGAIN");
         this.model = await pipeline('sentiment-analysis', 'onnx-community/multilingual-sentiment-analysis-ONNX', {
             progress_callback: (progress) => {
                 if (!progress.status) return;

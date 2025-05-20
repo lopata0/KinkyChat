@@ -2,6 +2,7 @@ import { Chat } from "@mod/Chat/Chat";
 import { ChatManager } from "@mod/Chat/ChatManager";
 import { SentimentClassification } from "@mod/Models/Sentiment";
 import { ModUi } from "@mod/UI/ModUi";
+import { clamp } from "@mod/math/math";
 
 export class ChatDialogue {
 
@@ -31,12 +32,12 @@ export class ChatDialogue {
                     playertext: "Default",
                     response: "Default",
                     clickFunction: (_gagged, _player) => {
-                (async () => {
-                    await this.sayOption(_gagged, _player);
-                })();
+                        (async () => {
+                            await this.sayOption(_gagged, _player);
+                        })();
 
-                return false;
-            },
+                        return false;
+                    },
                 },
                 "Leave": {
                     playertext: "Leave", response: "Default",
@@ -57,12 +58,14 @@ export class ChatDialogue {
     }
 
     static formatResponse(response: string): string {
-        const unnecessaryNewLinesRegex = new RegExp(`(\\n+)\\n`, 'g');
-        response = response.replace(unnecessaryNewLinesRegex, `\n`);
+        //const unnecessaryNewLinesRegex = new RegExp(`(\\n+)\\n`, 'g');
+        //response = response.replace(unne"cessaryNewLinesRegex, `\n`);
+        response = response.replace(/(?:\r\n|\r|\n)/g, ' ');
+        
 
         let r = "";
         let spacesCount = 0;
-        const newLinePerSpaces = 8;
+        const newLinePerSpaces = 10;
 
         for (let i = 0; i < response.length; i++) {
             let l = response[i];
@@ -77,6 +80,42 @@ export class ChatDialogue {
             r += response[i];
         }
         return r;
+    }
+
+    static convertSentimentToRep(currentOpinion: number, factionOpinion: number | undefined, label: string, score: number): number {
+        let sentimentScore = 0;
+
+        switch (label) {
+            case "Very Negative":
+                sentimentScore = 1;
+                break;
+            case "Negative":
+                sentimentScore = 25;
+                break;
+            case "Neutral":
+                sentimentScore = 50;
+                break;
+            case "Positive":
+                sentimentScore = 75;
+                break;
+            case "Very Positive":
+                sentimentScore = 99;
+                break;
+        }
+
+        console.log("sentiment score", sentimentScore);
+
+        if (factionOpinion != undefined) {
+            factionOpinion = (factionOpinion - 50) / 100;
+            sentimentScore = 0.7 * sentimentScore + 0.3 * factionOpinion;
+            console.log("sentiment faction apply", sentimentScore);
+        }
+
+
+        const alpha = 0.1;
+        currentOpinion = alpha * sentimentScore + (1 - alpha) * currentOpinion;
+
+        return clamp(currentOpinion);
     }
 
     static generateGaggedTalk(input: string) {
@@ -101,6 +140,8 @@ export class ChatDialogue {
     static async sayOption(_gagged: boolean, _player: Object) {
         if (!ModUi.chatInput) throw new Error("chatInput is undefined");
         if (!this.chatManager) throw new Error("chatManager is undefined");
+        if (!this.chatManager.currentChat) throw new Error("currentChat is undefined");
+
         let message = ModUi.typedText;
         console.log(ModUi.chatInput);
         if (_gagged) {
@@ -115,8 +156,29 @@ export class ChatDialogue {
             }
         });
 
-        let res = this.sentimentClassification?.model(reply);
-        console.log(res);
+        const sentiment = await this.sentimentClassification?.model(reply);
+        let enemy = KDDialogueEnemy();
+        let factionRelation = undefined;
+        if (enemy && enemy.faction) {
+            factionRelation = ((KinkyDungeonFactionRelations as any)["Player"][enemy.faction] as number);
+            factionRelation = (factionRelation / 2 + 0.5) * 100;
+        }
+        console.log("faction relation", factionRelation)
+        console.log("opinion", this.chatManager.currentChat.opinion);
+        console.log("sentiment", sentiment[0].label);
+        const opinion = this.convertSentimentToRep(this.chatManager.currentChat.opinion, factionRelation, sentiment[0].label, sentiment[0].score);
+
+        if (enemy && enemy.faction && factionRelation != null) {
+            const delta = opinion - this.chatManager.currentChat.opinion;
+            console.log("faction opinion delta", 0.2 * delta);
+            console.log("faction relation new", factionRelation + 0.1 * delta);
+            ((KinkyDungeonFactionRelations as any)["Player"][enemy.faction] as number) = ((factionRelation + 0.1 * delta) / 100 - 0.5) * 2;
+            
+        }
+        console.log("opinion new", opinion);
+        this.chatManager.currentChat.opinion = opinion;
+
+        console.log("response formatted", this.formatResponse(reply));
 
         addTextKey("rGenericAllyChat", this.formatResponse(reply));
 
@@ -138,15 +200,19 @@ export class ChatDialogue {
         KDGameData.CurrentDialogStage = "Chat_Say";
 
         const enemyId = enemy.id;
-        if(!enemyId) return;
+        if (!enemyId) return;
         const chat = ChatManager.chats[enemyId];
-        let memories = "";
-        if (chat) {
-            this.chatManager.currentChat = chat;
-            let memories = await this.chatManager.createMemoriesFromCurrentChat();
-            console.log(memories);
+
+        if (!chat) {
+            this.chatManager.currentChat = new Chat(enemy);
         }
-        this.chatManager.currentChat = new Chat(enemy, memories);
+        else {
+            this.chatManager.currentChat = chat;
+            await this.chatManager.restartCurrentChat();
+        }
+
+
+
         ChatManager.chats[enemyId] = this.chatManager.currentChat;
 
         KDGameData.CurrentDialogMsg = "GenericAllyChat";

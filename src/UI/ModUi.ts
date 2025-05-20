@@ -139,6 +139,7 @@ export class ModUi {
             });
             KDModSettings[this.modName] = settingsobject;
             this.refreshConfig();
+            if (!KinkyChat.loaded && ModUi.config.autoLoad) KinkyChat.loadMod();
         }
 
         KDEventMapGeneric['afterModConfig'][this.modName] = (e, data) => {

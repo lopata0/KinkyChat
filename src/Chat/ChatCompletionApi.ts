@@ -82,7 +82,6 @@ export class ChatCompletionApi extends ChatCompletion {
                     } else {
                         try {
                             const parsed = JSON.parse(data);
-                            console.log(data);
                             if (parsed.message || (parsed.choices && parsed.choices[0].delta.content)) {
                                 if (parsed.choices) result += parsed.choices[0].delta.content;
                                 else if (parsed.message) result += parsed.message.content;

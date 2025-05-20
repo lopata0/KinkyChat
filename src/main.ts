@@ -18,8 +18,6 @@ export class KinkyChat {
             console.log("WebGPU not detected");
             addTextKey("KDModButton" + ModUi.modName + "UseDefaultModelWeb", "Use automatic default model in browser (recommended disabling, no WebGPU detected)");
         }
-
-        if (!KinkyChat.loaded && ModUi.config.autoLoad) KinkyChat.loadMod();
     }
 
     static async loadMod() {
