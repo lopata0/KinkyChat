@@ -11,6 +11,8 @@ npm install
 npm run prepare
 npm run build
 ```
+(note: "npm install" and "npm run prepare" are just first time only)
+
 After building there should be KinkyChat.zip inside dist directory. Please open issue if you get errors.
 
 ## Mod features:
