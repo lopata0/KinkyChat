@@ -78,10 +78,22 @@ export class Chat {
     public messages?: Message[];
     public opinion = 50;
     public enemyId = -1;
-    constructor(enemy: any) {
+
+    constructor(enemy: any, reinit = false) {
+        if(reinit) return;
         this.enemyId = enemy.id;
         console.log(this.enemyId);
         this.initMessages();
+    }
+
+    static reinit(data: any) {
+        const chat = new Chat(null, true);
+        chat.memories = data.memories;
+        chat.npcName = data.npcName;
+        chat.messages = data.messages;
+        chat.opinion = data.opinion;
+        chat.enemyId = data.enemyId;
+        return chat;
     }
 
     public initMessages() {

@@ -62,7 +62,7 @@ export class ModUiFunctions {
         };
 
         let save: ExtendedSave = KinkyDungeonGenerateSaveDataOriginal();
-        
+
         save.KinkyChat = {};
         console.log(ChatManager.chats);
         const dict = Object.fromEntries(Object.entries(ChatManager.chats));
@@ -80,7 +80,11 @@ export class ModUiFunctions {
             if (savetmp.KinkyChat != undefined) {
                 if (savetmp.KinkyChat == null) return KinkyDungeonLoadGameOriginal(String);
                 console.log(savetmp.KinkyChat.chats);
-                ChatManager.chats = Object.fromEntries(Object.entries(savetmp.KinkyChat.chats));
+                const chats = Object.fromEntries(Object.entries(savetmp.KinkyChat.chats));
+                ChatManager.chats = {};
+                for (let key in chats) {
+                    ChatManager.chats[Number.parseInt(key)] = Chat.reinit(chats[key]);
+                }
                 console.log("converted:");
                 console.log(ChatManager.chats);
             }
