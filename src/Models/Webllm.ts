@@ -11,10 +11,10 @@ export class Webllm {
         const appConfig = {
             model_list: [
                 {
-                    model: "https://huggingface.co/mlc-ai/Hermes-3-Llama-3.2-3B-q4f16_1-MLC",
+                    model: "https://huggingface.co/mlc-ai/Hermes-3-Llama-3.2-3B-q4f32_1-MLC",
                     model_id: "Hermes-3-Llama-3.2-3B",
                     model_lib: modelLibURLPrefix +
-                        modelVersion + "/Llama-3.2-3B-Instruct-q4f16_1-ctx4k_cs1k-webgpu.wasm",
+                        modelVersion + "/Llama-3.2-3B-Instruct-q4f32_1-ctx4k_cs1k-webgpu.wasm",
                     vram_required_MB: 2951.51,
                     low_resource_required: true,
                     overrides: {
