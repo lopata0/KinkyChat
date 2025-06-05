@@ -1,9 +1,9 @@
 import { Message } from "@mod/Chat/ChatCompletion";
 
-function gaussianRandom(mean=0, stdev=1) {
+function gaussianRandom(mean = 0, stdev = 1) {
     const u = 1 - Math.random(); // Converting [0,1) to (0,1]
     const v = Math.random();
-    const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+    const z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
     // Transform to the desired mean and standard deviation:
     return z * stdev + mean;
 }
@@ -33,7 +33,9 @@ function formatData(data: any) {
         if (!key || !value) continue;
         console.log("pass5");
         if (key == "restraints") {
+            if ((value as Array<string>).length == 0) continue;
             dataFormated += `Wearing these restraints: ${(value as Array<string>).join(", ")}\n`;
+            continue;
         }
         dataFormated += `${key} is ${value}\n`;
     }
@@ -49,7 +51,6 @@ interface PlayerData {
     securityLevel: string,
     prisonerState: string,
     gagged: boolean,
-    restraints: Array<string>,
 }
 
 interface EnemyData {
@@ -78,16 +79,18 @@ export class Chat {
     public messages?: Message[];
     public opinion = 50;
     public enemyId = -1;
+    public restraints?: any[];
 
-    constructor(enemy: any, reinit = false) {
-        if(reinit) return;
+    constructor(enemy: any, restraints: any, reinit = false) {
+        if (reinit) return;
         this.enemyId = enemy.id;
+        this.restraints = restraints;
         console.log(this.enemyId);
         this.initMessages();
     }
 
     static reinit(data: any) {
-        const chat = new Chat(null, true);
+        const chat = new Chat(null, null, true);
         chat.memories = data.memories;
         chat.npcName = data.npcName;
         chat.messages = data.messages;
@@ -118,18 +121,14 @@ export class Chat {
             securityLevel: convertScaleToText(KinkyDungeonGoddessRep["Prisoner"] + 50),
             prisonerState: KDGameData.PrisonerState,
             gagged: KDIsGaggedFast(),
-            restraints: []
         };
 
 
         const factionRelation = (KinkyDungeonFactionRelations as any)["Player"][enemy.faction];
         this.opinion = getRandomOpinion(factionRelation ? (factionRelation / 2 + 0.5) * 100 : 50);
-        
+
         if (playerData.prisonerState == "") playerData.prisonerState = "not a prisoner";
         const playerRestraints = KDGetRestraintsForCharacter(player);
-        playerRestraints.forEach((restraint) => {
-            playerData.restraints.push(restraint.name);
-        });
 
 
         let enemyPersonality: string = enemy.personality;
@@ -161,6 +160,42 @@ export class Chat {
         const playerDataFormated = formatData(playerData);
         const enemyDataFormated = formatData(enemyData);
         const mapDataFormated = formatData(mapData);
+
+
+        let restraintsList = ""
+
+        if (this.restraints != undefined) {
+            let first = true;
+            console.log(this.restraints);
+            this.restraints.forEach((restraint: any) => {
+                if (first) {
+                    restraintsList += restraint.restraint.name;
+                    first = false;
+                    return;
+                }
+                restraintsList += ", " + restraint.restraint.name;
+
+            });
+        }
+
+        let restraintsListPlayer = "";
+
+        if (playerRestraints != undefined) {
+            let first = true;
+            playerRestraints.forEach((restraint: any) => {
+                console.log(restraint);
+                if (first) {
+                    restraintsListPlayer += restraint.name;
+                    first = false;
+                    return;
+                }
+                restraintsListPlayer += ", " + restraint.name;
+
+            });
+        }
+
+
+
         this.messages = [
             {
                 'role': 'system',
@@ -169,7 +204,9 @@ export class Chat {
             }]
         if (this.memories != "") this.messages[0]["content"] += "\nYour memories:\n" + this.memories;
         this.messages[0]["content"] += `\nYour opinion of player: ${convertScaleToText(this.opinion)}\nAlways keep answers strictly short.`
-
+        if (restraintsList != "") this.messages[0]["content"] += `\nYou give or remove player restraints by roleplaying.
+Restraint names able to add to player: ${restraintsList}
+Restraints player is already wearing: ${restraintsListPlayer == "" ? "none" : restraintsListPlayer}`;
     }
 
     public addHistory(role: "system" | "user" | "assistant", content: string) {

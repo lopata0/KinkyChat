@@ -72,11 +72,13 @@ export class ModUiFunctions {
     }
     static KinkyDungeonLoadGame(String: string, loadfromfile = undefined) {
         let savetmp;
+        ChatManager.chats = {};
         if (String)
             savetmp = JSON.parse(LZString.decompressFromBase64(String));
         else
             savetmp = JSON.parse(LZString.decompressFromBase64(localStorage.getItem('KinkyDungeonSave')));
         if (!loadfromfile) {
+            
             if (savetmp.KinkyChat != undefined) {
                 if (savetmp.KinkyChat == null) return KinkyDungeonLoadGameOriginal(String);
                 console.log(savetmp.KinkyChat.chats);

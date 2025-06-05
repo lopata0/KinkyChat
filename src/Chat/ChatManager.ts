@@ -39,9 +39,10 @@ export class ChatManager {
         return response;
     }
 
-    public async restartCurrentChat() {
+    public async restartCurrentChat(restraints: any[]) {
         if (!this.currentChat) return;
         this.currentChat.memories = await this.createMemoriesFromCurrentChat();
+        this.currentChat.restraints = restraints;
         console.log(this.currentChat.memories);
         this.currentChat.initMessages();
     }
@@ -53,5 +54,29 @@ export class ChatManager {
         if (response instanceof Error) throw response;
         this.currentChat.addHistory("assistant", response);
         return response;
+    }
+
+    public async extractFunctionsFromText(text: string) {
+        /*Text: ""
+Functions: 
+- add restraint_name - adding restraint to another speaker
+- remove restraint_name - removing restraint to another speaker
+
+From given text extract all functions.
+For example if text is "Sure! *gives you LatexBoots*" you just output "add LatexBoots"*/
+        const messages: Message[] = [
+            {"role": "system", "content": `You are function extractor from text. From text user sends you extract functions.
+There are 2 functions:
+add restraint_name - when user is adding restraint on you
+remove restraint_name - when user is removing restraint from you
+
+You must identify real wearable kinky restraints from text.
+
+You just output these functions, for example if user says "*pulls out latex mittens and puts it on you*" you just output "add LatexMittens".
+If theres really none just output "none".`},
+            {"role": "user", "content": text}
+        ];
+        return await this.chatCompletion.complete({ messages: messages, temperature: 0, min_p: 0.1 });
+        
     }
 }

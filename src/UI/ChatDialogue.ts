@@ -8,6 +8,8 @@ export class ChatDialogue {
 
     static chatManager?: ChatManager;
     static sentimentClassification?: SentimentClassification;
+    static restraintsCurrent?: any[];
+    static enemyCurrent?: any;
 
     static init(chatManager: ChatManager, sentimentClassification: SentimentClassification) {
         this.chatManager = chatManager;
@@ -61,7 +63,7 @@ export class ChatDialogue {
         //const unnecessaryNewLinesRegex = new RegExp(`(\\n+)\\n`, 'g');
         //response = response.replace(unne"cessaryNewLinesRegex, `\n`);
         response = response.replace(/(?:\r\n|\r|\n)/g, ' ');
-        
+
 
         let r = "";
         let spacesCount = 0;
@@ -137,6 +139,44 @@ export class ChatDialogue {
         return gaggedText;
     }
 
+    static addRestraint(restraintName: string) {
+        if(this.restraintsCurrent == undefined) return;
+        this.restraintsCurrent.forEach((restraint: any) => {
+            console.log((restraint as any).restraint.name, restraintName);
+            if ((restraint as any).restraint.name.toLowerCase().includes(restraintName.toLowerCase())) {
+                console.log("pass");
+                //KinkyDungeonAddRestraint(restraint);
+                /*KinkyDungeonAddRestraint(restraint as any, ((this.enemyCurrent ? this.enemyCurrent.Enemy.power + KDEnemyRank(this.enemyCurrent) : 0) || 0),
+                    KinkyDungeonStatsChoice.has("MagicHands") ? true : this.enemyCurrent?.Enemy.bypass, (this.enemyCurrent?.Enemy.useLock ? this.enemyCurrent.Enemy.useLock : ((restraint as any).DefaultLock || Lock)),
+                    true, undefined, undefined, this.enemyCurrent?.Enemy.applyFaction || this.enemyCurrent || this.enemyCurrent?.Enemy.defaultFaction,
+                    KinkyDungeonStatsChoice.has("MagicHands") ? true : undefined,
+                    undefined, this.enemyCurrent, true,
+                    undefined, undefined, undefined, undefined);*/
+                KinkyDungeonAddRestraint((restraint as any).restraint,
+                    ((this.enemyCurrent ? this.enemyCurrent.Enemy.power + KDEnemyRank(this.enemyCurrent) : 0) || 0),
+                    true,
+                    this.enemyCurrent.Enemy.attackLock,
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                    this.enemyCurrent.faction);
+                return; 
+            }
+        });
+    }
+
+    static removeRestraint(restraintName: string) {
+        const playerRestraints = KDGetRestraintsForCharacter(KinkyDungeonPlayer);
+        playerRestraints.forEach((restraint: any) => {
+            if ((restraint as any).name.toLowerCase().includes(restraintName.toLowerCase())) {
+                console.log("pass");
+                KinkyDungeonRemoveRestraintsWithName((restraint as any).name);
+                return; 
+            }
+        });
+    }
+
     static async sayOption(_gagged: boolean, _player: Object) {
         if (!ModUi.chatInput) throw new Error("chatInput is undefined");
         if (!this.chatManager) throw new Error("chatManager is undefined");
@@ -173,14 +213,56 @@ export class ChatDialogue {
             console.log("faction opinion delta", 0.2 * delta);
             console.log("faction relation new", factionRelation + 0.1 * delta);
             ((KinkyDungeonFactionRelations as any)["Player"][enemy.faction] as number) = ((factionRelation + 0.1 * delta) / 100 - 0.5) * 2;
-            
+
         }
         console.log("opinion new", opinion);
         this.chatManager.currentChat.opinion = opinion;
 
+        //reply
+
+        //const regexAsterisks = /\*([^*]+)\*/g;
+
+        /*let matches;
+        while ((matches = regexAsterisks.exec(reply)) !== null) {
+            let match = matches[1];
+            if (match.toLocaleLowerCase().includes("adds")) {
+                const regex = /adds\s+(\w+)/i;
+                let restraintMatch = match.match(regex);
+                if (restraintMatch) {
+                    let restraintName = restraintMatch[1];
+                }
+            }
+            else if (match.toLocaleLowerCase().includes("removes")) {
+                const regex = /removes\s+(\w+)/i;
+                let restraintMatch = match.match(regex);
+                if (restraintMatch) {
+                    let restraintName = restraintMatch[1];
+                }
+            }
+        }*/
+
+
         console.log("response formatted", this.formatResponse(reply));
 
         addTextKey("rGenericAllyChat", this.formatResponse(reply));
+
+        const functions = await this.chatManager.extractFunctionsFromText(reply);
+        console.log(functions);
+        if(functions instanceof Error) throw functions;
+        for(let line of functions.split(/\r?\n/)) {
+            console.log(line);
+            let name = line.split(" ")[0].toLowerCase();
+            let arg = line.split(" ")[1];
+            console.log("")
+            if(name == "add") {
+                console.log("Adding: ", arg);
+                this.addRestraint(arg);
+            }
+            else if(name == "remove") {
+                console.log("Removing: ", arg);
+                this.removeRestraint(arg);
+            }
+        }
 
         KDGameData.CurrentDialogMsg = "GenericAllyChat";
         KDGameData.CurrentDialogStage = "Chat";
@@ -195,21 +277,71 @@ export class ChatDialogue {
         if (!KDDialogueEnemy() || !this.chatManager) return;
         let enemy = KDDialogueEnemy();
         console.log(enemy);
+        this.enemyCurrent = enemy;
+        if (enemy.Enemy == undefined) throw Error("enemy is undefined");
         addTextKey("rGenericAllyChat_Say", "Thinking...");
         KDGameData.CurrentDialogMsg = "GenericAllyChat_Say";
         KDGameData.CurrentDialogStage = "Chat_Say";
 
         const enemyId = enemy.id;
-        if (!enemyId) return;
+        if (!enemyId || enemy.Enemy.power == undefined) return;
         const chat = ChatManager.chats[enemyId];
 
+        let rThresh = enemy.Enemy.RestraintFilter?.powerThresh || (KDDefaultRestraintThresh + (Math.max(0, enemy.Enemy.power - 1) || 0));
+
+        this.restraintsCurrent = KDGetRestraintsEligible(
+            { tags: KDGetTags(enemy, enemy.usingSpecial as boolean) }, KDGetEffLevel() + (enemy.Enemy.RestraintFilter?.levelBonus || enemy.Enemy.power || 0) + (AIData.attack?.includes("Suicide") ? 10 : 0),
+            KDCurrIndex(),
+            enemy.Enemy.bypass as boolean,
+            enemy.Enemy.useLock ? enemy.Enemy.useLock : "",
+            !(enemy.Enemy.ignoreStaminaForBinds || (enemy.usingSpecial && enemy.Enemy.specialIgnoreStam)) && !AIData.attack?.includes("Suicide"),
+            !AIData.addMoreRestraints && !enemy.usingSpecial && AIData.addLeash,
+            !KinkyDungeonStatsChoice.has("TightRestraints"),
+            KDGetExtraTags(enemy, enemy.usingSpecial as boolean, true),
+            false,
+            {
+                maxPower: rThresh + 0.01 + 10,
+                looseLimit: true,
+                onlyUnlimited: true,
+                ignore: enemy.items,
+            }, enemy, undefined, (true as unknown) as number);
+
+
         if (!chat) {
-            this.chatManager.currentChat = new Chat(enemy);
+            this.chatManager.currentChat = new Chat(enemy, this.restraintsCurrent);
         }
         else {
             this.chatManager.currentChat = chat;
-            await this.chatManager.restartCurrentChat();
+            await this.chatManager.restartCurrentChat(this.restraintsCurrent);
         }
+
+
+
+        /*let restraintAdd = KDGetRestraintWithVariants(
+            { tags: KDGetTags(enemy, enemy.usingSpecial as boolean) }, KDGetEffLevel() + (enemy.Enemy.RestraintFilter?.levelBonus || enemy.Enemy.power || 0),
+            KDCurrIndex(),
+            enemy.Enemy.bypass as boolean,
+            enemy.Enemy.useLock ? enemy.Enemy.useLock : "",
+            !(KDPlayerIsStunned() || enemy.Enemy.ignoreStaminaForBinds || (enemy.usingSpecial && enemy.Enemy.specialIgnoreStam)) && !AIData.attack?.includes("Suicide"),
+            !AIData.addMoreRestraints && !enemy.usingSpecial && AIData.addLeash,
+            !KinkyDungeonStatsChoice.has("TightRestraints"),
+            KDGetExtraTags(enemy, enemy.usingSpecial as boolean, true),
+            false,
+            {
+                //minPower: rThresh,
+                //onlyLimited: !enemy.Enemy.RestraintFilter?.limitedRestraintsOnly,
+                ignore: [],//[...restraintAdd.map((rst) => { return rst.r.name; })],
+                looseLimit: true,
+                require: enemy.Enemy.RestraintFilter?.unlimitedRestraints ? undefined : enemy.items,
+            }, enemy, undefined, true, undefined, {
+            allowLowPower: KDRandom() < 0.5,
+            extraOptions: enemy.items,
+            willBonus: enemy.Enemy.willBonus,
+            
+        },);*/
+
+        console.log(this.restraintsCurrent);
+
 
 
 
