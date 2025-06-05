@@ -151,7 +151,7 @@ export class ModUi {
 
     static refreshConfig() {
         this.config.apiUrl = KDModSettings[this.modName][this.modName + "ApiUrlInput"];
-        this.config.apiModelName = KDModSettings[this.modName][this.modName + "ApiUrlInput"];
+        this.config.apiModelName = KDModSettings[this.modName][this.modName + "ModelNameInput"];
         this.config.autoLoad = KDModSettings[this.modName][this.modName + "AutoLoad"];
         this.config.useDefaultModel = KDModSettings[this.modName][this.modName + "UseDefaultModelWeb"];
     }
