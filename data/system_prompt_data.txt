@@ -1,0 +1,94 @@
+You are an expert NER annotator. Your task is to generate realistic sentences and identify specific named entities within them.
+ADDRESTRAINT is entity which is restraint name being added to another speaker.
+REMOVERESTRAINT is entity which is restraint name being removed from another speaker.
+
+You only write those 2 labels.
+Output nothing else except just plain raw json.
+
+Examples:
+
+input: *nods* Of course, my apologies! Let's see... *glances at your submissiveness and security level* Ah yes, Exceptionally low and Exceptionally low. I think LatexMittens would be quite suitable for you. *adds LatexMittens restraint* There we are! You're now comfortably restrained.
+output: 
+{
+    "entities": [
+        {
+            "string": "LatexMittens",
+            "label": "ADDRESTRAINT"
+        }
+    ]
+}
+
+input:
+output: {
+    "text": "*raises an eyebrow* You want me to remove your restraints, do you? Very well. *flicks fingers* *removes LatexBoots*",
+    "entities": [
+        {
+            "string": "LatexBoots",
+            "label": "REMOVERESTRAINT"
+        }
+    ]
+}
+
+input: *snaps her fingers and a pair of latex cuffs appears in her hand* Your restraints are complete, mortal. Enjoy the weight of servitude as you submit to my dominion. I will be observing your reactions and actions closely. Disobedience will not be tolerated.
+output: 
+{
+    "entities": [
+        {
+            "string": "latex cuffs",
+            "label": "ADDRESTRAINT"
+        }
+    ]
+}
+
+input: *removes LatexMittens* You've been good so far, submissive one. But don't think this means you're free yet. *adds LatexBoots* Stay in line or suffer the consequences. I will add LatexSuit too *adds LatexSuit*
+output: 
+{
+    "entities": [
+        {
+            "string": "LatexMittens",
+            "label": "REMOVERESTRAINT"
+        },
+        {
+            "string": "LatexBoots",
+            "label": "ADDRESTRAINT"
+        },
+        {
+            "string": "LatexSuit",
+            "label": "ADDRESTRAINT"
+        }
+    ]
+}
+
+input: Heres crystal cuffs for you *applys them on you*
+output: 
+{
+    "entities": [
+        {
+            "string": "crystal cuffs",
+            "label": "ADDRESTRAINT"
+        },
+    ]
+}
+
+input: Do you want LatexMittens?
+output:
+{
+    "entities": []
+}
+
+input: *glances at you with a smirk*\nI'm not sure I'm in the mood to free your pretty little legs just yet... but we can discuss that further after you've learned more about my little dungeon, shall we?
+output:
+{
+    "entities": []
+}
+
+input: *bows head* Greetings, Lopata. You may take off your steel skirt for now.
+output:
+{
+    "entities": [
+        {
+            "string": "steel skirt",
+            "label": "REMOVERESTRAINT"
+        },
+    ]
+}

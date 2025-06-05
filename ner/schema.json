@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/spacy_ner_training_data.schema.json",
+  "title": "spaCy NER Training Data",
+  "description": "Schema for a list of training examples for spaCy's Named Entity Recognition (NER) component.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "entities"
+    ],
+    "properties": {
+      "entities": {
+        "type": "array",
+        "description": "Can be an empty array if no entities are found in the text.",
+        "items": {
+          "type": "object",
+          "required": [
+            "string",
+            "number",
+            "label"
+          ],
+          "properties": {
+            "string": {
+              "type": "string",
+              "minimum": 0,
+              "description": "The entity string."
+            },
+            "start": {
+              "type": "number",
+              "minimum": 0,
+              "description": "The serial number of entity string in sentence (first, second, third, ...)."
+            },
+            "label": {
+              "type": "string",
+              "description": "The label or type of the named entity (e.g., 'ADDRESTRAINT', 'REMOVERESTRAINT').",
+              "examples": [
+                "ADDRESTRAINT",
+                "REMOVERESTRAINT"
+              ],
+              "enum": [
+                "ADDRESTRAINT",
+                "REMOVERESTRAINT"
+              ]
+            }
+          }
+        },
+        "minItems": 0
+      }
+    }
+  },
+  "examples": [
+    {
+      "text": "*nods* Of course, my apologies! Let's see... *glances at your submissiveness and security level* Ah yes, Exceptionally low and Exceptionally low. I think LatexMittens would be quite suitable for you. *adds LatexMittens restraint* There we are! You're now comfortably restrained.",
+      "entities": [
+        {
+          "string": "LatexMittens",
+          "number": 0,
+          "label": "ADDRESTRAINT"
+        }
+      ]
+    },
+    {
+      "text": "*raises an eyebrow* You want me to remove your restraints, do you? Very well. *flicks fingers* *removes LatexBoots*",
+      "entities": [
+        {
+          "string": "LatexBoots",
+          "number": 0,
+          "label": "REMOVERESTRAINT"
+        }
+      ]
+    },
+    {
+      "text": "*snaps her fingers and a pair of latex cuffs appears in her hand* Your restraints are complete, mortal. Enjoy the weight of servitude as you submit to my dominion. I will be observing your reactions and actions closely. Disobedience will not be tolerated.",
+      "entities": [
+        {
+          "string": "latex cuffs",
+          "number": 0,
+          "label": "ADDRESTRAINT"
+        }
+      ]
+    },
+    {
+      "text": "Do you want LatexMittens?",
+      "entities": []
+    },
+    {
+      "text": "*glances at you with a smirk*\nI'm not sure I'm in the mood to free your pretty little legs just yet... but we can discuss that further after you've learned more about my little dungeon, shall we?",
+      "entities": []
+    }
+  ]
+}

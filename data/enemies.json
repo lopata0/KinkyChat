@@ -1,0 +1,450 @@
+[
+    {
+        "name": "PrisonerBandit",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "ShopkeeperRescue",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "ShopkeeperStart",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "DressmakerQuest",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "ApprenticeQuest",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "BlacksmithQuest",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "AdaLovelock",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "AntiqueQuest",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "BowyerQuest",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "ArmorerQuest",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "DragonheartQuest",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "MaidforceQuest",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "DragonLeaderDuelist",
+        "faction": "Enemy"
+    },
+    {
+        "name": "BanditQuest",
+        "faction": "Prisoner"
+    },
+    {
+        "name": "EarthenMonolith",
+        "faction": "Rock"
+    },
+    {
+        "name": "HolyConstruct",
+        "faction": "Angel"
+    },
+    {
+        "name": "Angel",
+        "faction": "Angel"
+    },
+    {
+        "name": "Ninja",
+        "faction": "Bountyhunter"
+    },
+    {
+        "name": "Deputy",
+        "faction": "Bountyhunter"
+    },
+    {
+        "name": "NinjaStalker",
+        "faction": "Bountyhunter"
+    },
+    {
+        "name": "Maidforce",
+        "faction": "Maidforce"
+    },
+    {
+        "name": "MaidforcePara",
+        "faction": "Maidforce"
+    },
+    {
+        "name": "MaidforceStalker",
+        "faction": "Maidforce"
+    },
+    {
+        "name": "MaidforceMafia",
+        "faction": "Maidforce"
+    },
+    {
+        "name": "MaidforceMini",
+        "faction": "Maidforce"
+    },
+    {
+        "name": "MaidforceHead",
+        "faction": "Maidforce"
+    },
+    {
+        "name": "Ghost",
+        "faction": "Ghost"
+    },
+    {
+        "name": "TickleHand",
+        "faction": "Witch"
+    },
+    {
+        "name": "Conjurer",
+        "faction": "Witch"
+    },
+    {
+        "name": "ConjurerTickler",
+        "faction": "Witch"
+    },
+    {
+        "name": "Alchemist",
+        "faction": "Alchemist"
+    },
+    {
+        "name": "Alkahestor",
+        "faction": "Alchemist"
+    },
+    {
+        "name": "GlueTechnician",
+        "faction": "Alchemist"
+    },
+    {
+        "name": "SlimeEnthusiast",
+        "faction": "Alchemist"
+    },
+    {
+        "name": "AlchemistPet",
+        "faction": "Alchemist"
+    },
+    {
+        "name": "WolfgirlPet",
+        "faction": "Nevermere"
+    },
+    {
+        "name": "WolfGuard",
+        "faction": "Nevermere"
+    },
+    {
+        "name": "WolfInstructor",
+        "faction": "Nevermere"
+    },
+    {
+        "name": "WolfExecutive",
+        "faction": "Nevermere"
+    },
+    {
+        "name": "Wolfgirl",
+        "faction": "Nevermere"
+    },
+    {
+        "name": "WolfOperative",
+        "faction": "Nevermere"
+    },
+    {
+        "name": "WolfApprentice",
+        "faction": "Nevermere"
+    },
+    {
+        "name": "BanditGuard",
+        "faction": "Bandit"
+    },
+    {
+        "name": "Miner",
+        "faction": "Bandit"
+    },
+    {
+        "name": "Bandit",
+        "faction": "Bandit"
+    },
+    {
+        "name": "BanditChief",
+        "faction": "Bandit"
+    },
+    {
+        "name": "BanditPet",
+        "faction": "Bandit"
+    },
+    {
+        "name": "BanditHunter",
+        "faction": "Bandit"
+    },
+    {
+        "name": "BanditGrappler",
+        "faction": "Bandit"
+    },
+    {
+        "name": "DragonGirlPoison",
+        "faction": "DragonQueen"
+    },
+    {
+        "name": "DragonGirlCrystal",
+        "faction": "DragonQueen"
+    },
+    {
+        "name": "DragonGirlShadow",
+        "faction": "DragonQueen"
+    },
+    {
+        "name": "DragonGirlIce",
+        "faction": "DragonQueen"
+    },
+    {
+        "name": "Dragon",
+        "faction": "Dragon"
+    },
+    {
+        "name": "DragonShield",
+        "faction": "Dragon"
+    },
+    {
+        "name": "DragonIce",
+        "faction": "Dragon"
+    },
+    {
+        "name": "DragonPoison",
+        "faction": "Dragon"
+    },
+    {
+        "name": "DragonCrystal",
+        "faction": "Dragon"
+    },
+    {
+        "name": "DragonShadow",
+        "faction": "Dragon"
+    },
+    {
+        "name": "DragonLeader",
+        "faction": "Dragon"
+    },
+    {
+        "name": "ElementalFire",
+        "faction": "Elemental"
+    },
+    {
+        "name": "ElementalIce",
+        "faction": "Elemental"
+    },
+    {
+        "name": "ElementalWater",
+        "faction": "Elemental"
+    },
+    {
+        "name": "ElementalEarth",
+        "faction": "Elemental"
+    },
+    {
+        "name": "KeeperEarth",
+        "faction": "Elemental"
+    },
+    {
+        "name": "ElementalAir",
+        "faction": "Elemental"
+    },
+    {
+        "name": "Dryad",
+        "faction": "Elf"
+    },
+    {
+        "name": "JungleDryad",
+        "faction": "Enemy"
+    },
+    {
+        "name": "ElfRanger",
+        "faction": "Elf"
+    },
+    {
+        "name": "Elf",
+        "faction": "Elf"
+    },
+    {
+        "name": "CorruptedAdventurer",
+        "faction": "Ghost"
+    },
+    {
+        "name": "DemonEye",
+        "faction": "Observer"
+    },
+    {
+        "name": "AnimChastity",
+        "faction": "KinkyConstruct"
+    },
+    {
+        "name": "AnimYoke",
+        "faction": "KinkyConstruct"
+    },
+    {
+        "name": "ElementalRope",
+        "faction": "Elemental"
+    },
+    {
+        "name": "ElementalRubber",
+        "faction": "Elemental"
+    },
+    {
+        "name": "ElementalLeather",
+        "faction": "Elemental"
+    },
+    {
+        "name": "Dollsmith",
+        "faction": "Enemy"
+    },
+    {
+        "name": "Dollmaker",
+        "faction": "Enemy"
+    },
+    {
+        "name": "DollsmithDoll",
+        "faction": "Enemy"
+    },
+    {
+        "name": "Apprentice",
+        "faction": "Apprentice"
+    },
+    {
+        "name": "Apprentice2",
+        "faction": "Apprentice"
+    },
+    {
+        "name": "ApprenticeSlime",
+        "faction": "Apprentice"
+    },
+    {
+        "name": "WitchRope",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchShibari",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchFlame",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchIce",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchEarth",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchWater",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchAqua",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchShock",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchMagnet",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchChain",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchMetal",
+        "faction": "Witch"
+    },
+    {
+        "name": "WitchSlime",
+        "faction": "Witch"
+    },
+    {
+        "name": "Necromancer",
+        "faction": "Enemy"
+    },
+    {
+        "name": "Fungal",
+        "faction": "Mushy"
+    },
+    {
+        "name": "Dressmaker",
+        "faction": "Dressmaker"
+    },
+    {
+        "name": "Nurse",
+        "faction": "Dressmaker"
+    },
+    {
+        "name": "Librarian",
+        "faction": "Dressmaker"
+    },
+    {
+        "name": "MummyCursed",
+        "faction": "Bast"
+    },
+    {
+        "name": "Mummy",
+        "faction": "Bast"
+    },
+    {
+        "name": "Cleric",
+        "faction": "Bast"
+    },
+    {
+        "name": "MeleeCleric",
+        "faction": "Bast"
+    },
+    {
+        "name": "BanditMerchant",
+        "faction": "Bandit"
+    },
+    {
+        "name": "Fuuka1",
+        "faction": "Boss"
+    },
+    {
+        "name": "Fuuka2",
+        "faction": "Boss"
+    },
+    {
+        "name": "TheWarden1",
+        "faction": "Boss"
+    },
+    {
+        "name": "TheWarden2",
+        "faction": "Boss"
+    },
+    {
+        "name": "DollmakerBoss1",
+        "faction": "Boss"
+    },
+    {
+        "name": "DollmakerBoss2",
+        "faction": "Boss"
+    },
+    {
+        "name": "DollmakerBoss3",
+        "faction": "Boss"
+    }
+]
