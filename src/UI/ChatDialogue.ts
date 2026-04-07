@@ -58,26 +58,32 @@ export class ChatDialogue {
     }
 
     static formatResponse(response: string): string {
-        //const unnecessaryNewLinesRegex = new RegExp(`(\\n+)\\n`, 'g');
-        //response = response.replace(unne"cessaryNewLinesRegex, `\n`);
         response = response.replace(/(?:\r\n|\r|\n)/g, ' ');
-        
 
         let r = "";
-        let spacesCount = 0;
-        const newLinePerSpaces = 10;
+        let charsCount = 0;
+        const newLinePerCharacters = 30;
 
-        for (let i = 0; i < response.length; i++) {
-            let l = response[i];
-            if (l == ' ') spacesCount++;
-            if (l == '\n' || l == '|') spacesCount = 0;
-            if (spacesCount == newLinePerSpaces) {
+        for (let l of response) {
+            charsCount++;
+
+            console.log(l);
+            console.log(charsCount);
+
+            
+            const isNewline = /[\n\r\u2028\u2029]/.test(l);
+            const isSpace = /[ \u00A0\u1680\u180e\u2000-\u200a\u202f\u205f\u3000]/.test(l);
+            const isPunctuation = /[!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~，。！？、；：、（）]/.test(l);
+
+            if (isNewline || l == '|') charsCount = 0;
+            if ((isSpace || isPunctuation) && charsCount >= newLinePerCharacters) {
+                if (isPunctuation) r += l;
                 r += '|';
-                spacesCount = 0;
+                charsCount = 0;
                 continue;
             }
 
-            r += response[i];
+            r += l;
         }
         return r;
     }

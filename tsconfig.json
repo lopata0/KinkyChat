@@ -14,7 +14,7 @@
     "moduleResolution": "node",
     "outDir": "./dist",
     "module": "ESNext",
-    "target": "ES5",
+    "target": "es5",
     "sourceMap": true,
     "removeComments": true,
     "esModuleInterop": true,
