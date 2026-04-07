@@ -62,9 +62,12 @@ export class ChatDialogue {
 
         let r = "";
         let charsCount = 0;
-        const newLinePerCharacters = 30;
+
+        const isChinese = /[\u4E00-\u9FFF]/.test(response.charAt(0));
+        const newLinePerCharacters = isChinese ? 30 : 70;
 
         for (let l of response) {
+            
             charsCount++;
 
             console.log(l);
